@@ -1,7 +1,5 @@
 # Impacta Project Biblioteca
 
-### Biblioteca
-
 #### Software Product: Analysis, Specification, Project & Implementation
 
 #### Faculdade Impacta
