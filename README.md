@@ -7,8 +7,8 @@
 Grupo formado por:
 
 - Victor Milhome Pires - RA 2101162
-- Fábio - RA
-- Thays Silva Dyab - RA
+- Fábio Oue Blaz - RA 2100781
+- Thays Silva Dyab - RA 2100589
 
 Para subir o projeto:
 
