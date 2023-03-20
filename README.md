@@ -17,9 +17,9 @@ Para subir o projeto:
 2. Rodar os seguintes comandos na pasta do projeto:
 
 ```
-    pip install -r requirements.txt
+pip install -r requirements.txt
 
-    python db/create_db.py
+python db/create_db.py
 ```
 
 3. O comando abaixo é opcional e serve apenas para popular o banco, de modo que a execução do aplicativo não mostre uma lista vazia.
