@@ -1,0 +1,22 @@
+{% extends 'book/base.html' %} {% block content %}
+<table class="table table-dark table-striped table-hover">
+  <thead>
+    <th scope="col">ID</th>
+    <th scope="col">Name</th>
+    <th scope="col">Author</th>
+    <th scope="col">Available?</th>
+    <th scope="col"></th>
+  </thead>
+  <tbody>
+    {% for book in books %}
+    <tr>
+      <td>{{ book['id'] }}</td>
+      <td>{{ book['name'] }}</td>
+      <td>{{ book['author'] }}</td>
+      <td>{{ book['is_available']}}</td>
+      <td><a href="{{ url_for('get_book', id=book['id']) }}">Entrar</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -4,9 +4,23 @@ import sqlite3 as sql
 app = Flask(__name__)
 
 @app.route("/")
+@app.route("/books")
 def home():
     books = fetch_all_books()
-    return render_template('book/index.html', books=books)
+    return render_template('book/books.html', books=books)
+
+@app.route("/books/<int:id>")
+def get_book(id):
+    con = sql.connect('library.db')
+    cur = con.cursor()
+    
+    cur.execute(f"""   
+    SELECT * FROM books WHERE id = {id}
+    """)
+    
+    book = cur.fetchone()
+    book_info = map_book(book)
+    return render_template('book/book.html', book=book_info)
 
 def fetch_all_books():
     con = sql.connect('library.db')
@@ -31,4 +45,4 @@ def map_book(book):
     
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
