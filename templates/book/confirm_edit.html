@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Confirmação de Edição</h1>
+  <p>Confirme as alterações do livro abaixo:</p>
+  <table>
+    <tr>
+      <th>Atributo</th>
+      <th>Valor Antigo</th>
+      <th>Valor Novo</th>
+    </tr>
+    <tr>
+      <td>Nome do Livro</td>
+      <td>{{ book_old.name }}</td>
+      <td>{{ book_new.name }}</td>
+    </tr>
+    <tr>
+      <td>Nome do Autor</td>
+      <td>{{ book_old.author }}</td>
+      <td>{{ book_new.author }}</td>
+    </tr>
+    <tr>
+      <td>Disponível</td>
+      <td>{{ book_old.is_available }}</td>
+      <td>{{ book_new.is_available }}</td>
+    </tr>
+  </table>
+
+  <form method="POST" action="{{ url_for('update_book', id=book_new.id) }}">
+    {{ csrf_token() }}
+    <button type="submit" class="btn btn-primary">Confirmar</button>
+    <a href="{{ url_for('get_book', id=book_new.id) }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}
