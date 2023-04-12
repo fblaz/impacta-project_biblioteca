@@ -1,0 +1,10 @@
+{% extends 'book/base.html' %}
+
+{% block content %}
+  <h1>Tem certeza que deseja deletar o livro "{{ book['name'] }}"?</h1>
+
+  <form method="post">
+    <button type="submit" class="btn btn-danger">Deletar</button>
+    <a href="{{ url_for('home') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}
