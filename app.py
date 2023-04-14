@@ -108,14 +108,14 @@ def edit_book(id):
 
         con.commit()
         flash("Livro atualizado com sucesso!")
-        return redirect(url_for('home'))
+        return redirect(url_for('get_book', id=id))
 
     except Exception as e:
         con.rollback()
         flash("Erro ao atualizar livro: " + str(e))
         return redirect(url_for('edit_book_form', id=id))
 
-# rota para deletar um livro específico
+
 @app.route('/delete_book/<int:id>', methods=['GET', 'POST'])
 def delete_book(id):
     con = sql.connect('library.db')
