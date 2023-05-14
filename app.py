@@ -5,7 +5,29 @@ app = Flask(__name__)
 app.secret_key = 'mysecretkey'
 
 # Rota para exibir a página inicial
-@app.route("/")
+# Rota para página de login
+@app.route('/', methods=['GET', 'POST'])
+@app.route("/login")
+def login():
+    if request.method == 'POST':
+
+        connection = sqlite3.connect('library.db')
+        cursor = connection.cursor()
+
+        name = request.form['name']
+        password = request.form['password']
+        print(name, password)
+
+        query  = "SELECT name, password FROM user where name= '"+name+"' and password= '"+password+"'"
+        cursor.execute(query)
+        results = cursor.fetchall()
+
+        if len(results) == 0:
+            print("Sorry, Incorrect Credentials Provided. Try again")
+        else:
+            return render_template('book/books.html', books=books)
+    return render_template('login/login.html')
+
 @app.route("/books")
 def home():
     books = fetch_all_books()
@@ -133,6 +155,8 @@ def delete_book(id):
     book_info = map_book(book)
 
     return render_template('book/delete_book.html', book=book_info)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
