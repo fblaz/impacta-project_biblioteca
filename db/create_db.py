@@ -15,6 +15,17 @@ IS_AVAILABLE BOOLEAN
 )
 '''
 
+# Criar tabela de usuários
+
+sql_user = '''
+CREATE TABLE "user" (
+INTEGER,
+NAME TEXT,
+PASSWORD VARCHAR
+)
+'''
+
 cursor.execute(sql)
+cursor.execute(sql_user)
 con.commit()
 con.close()

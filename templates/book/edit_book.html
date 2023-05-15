@@ -1,5 +1,4 @@
-{% extends 'book/base.html' %}
-{% block content %}
+{% extends 'book/base.html' %} {% block content %}
 <br />
 <div class="container">
   <div class="jumbotron jumbotron-fluid">
@@ -8,16 +7,32 @@
     <form method="POST" action="{{ url_for('edit_book', id=book['id']) }}">
       <div class="form-group">
         <label for="nome-livro">Nome do Livro</label>
-        <input type="text" class="form-control" id="nome-livro" name="nome-livro" value="{{ book['name'] }}" required>
+        <input
+          type="text"
+          class="form-control"
+          id="nome-livro"
+          name="nome-livro"
+          value="{{ book['name'] }}"
+          required
+        />
       </div>
-      <br>
+      <br />
       <div class="form-group">
         <label for="nome-autor">Nome do Autor</label>
-        <input type="text" class="form-control" id="nome-autor" name="nome-autor" value="{{ book['author'] }}" required>
+        <input
+          type="text"
+          class="form-control"
+          id="nome-autor"
+          name="nome-autor"
+          value="{{ book['author'] }}"
+          required
+        />
       </div>
-      <br>
-      <button type="submit" class="btn btn-primary">Salvar</button>
-      <a class="btn btn-dark" href="{{ url_for('home') }}" role="button">Voltar</a>
+      <br />
+      <button type="submit" class="btn btn-dark">Salvar</button>
+      <a class="btn btn-dark" href="{{ url_for('home') }}" role="button">
+        Voltar
+      </a>
     </form>
   </div>
 </div>

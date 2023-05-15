@@ -1,18 +1,28 @@
-{% extends 'book/base.html' %}
-
-{% block content %}
-  <div class="container mt-3">
-    <h1>Cadastro de Livro</h1>
-    <form method="POST" action="{{ url_for('cadastrar_livro') }}">
-      <div class="mb-3">
-        <label for="nome-autor" class="form-label">Nome do Autor</label>
-        <input type="text" class="form-control" id="nome-autor" name="nome-autor" required>
-      </div>
-      <div class="mb-3">
-        <label for="nome-livro" class="form-label">Nome do Livro</label>
-        <input type="text" class="form-control" id="nome-livro" name="nome-livro" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Cadastrar</button>
-    </form>
-  </div>
+{% extends 'book/base.html' %} {% block content %}
+<div class="container mt-3">
+  <h1>Cadastro de Livro</h1>
+  <form method="POST" action="{{ url_for('cadastrar_livro') }}">
+    <div class="mb-3">
+      <label for="nome-autor" class="form-label">Nome do Autor</label>
+      <input
+        type="text"
+        class="form-control"
+        id="nome-autor"
+        name="nome-autor"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="nome-livro" class="form-label">Nome do Livro</label>
+      <input
+        type="text"
+        class="form-control"
+        id="nome-livro"
+        name="nome-livro"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-dark">Cadastrar</button>
+  </form>
+</div>
 {% endblock %}
