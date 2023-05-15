@@ -22,7 +22,7 @@ def login():
         cursor.execute(query)
         results = cursor.fetchall()
 
-        books = books = fetch_all_books()
+        books = fetch_all_books()
 
         if len(results) == 0:
             print("Sorry, Incorrect Credentials Provided. Try again")
