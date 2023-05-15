@@ -7,7 +7,7 @@ app.secret_key = 'mysecretkey'
 # Rota para exibir a página inicial
 # Rota para página de login
 @app.route('/', methods=['GET', 'POST'])
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
 
