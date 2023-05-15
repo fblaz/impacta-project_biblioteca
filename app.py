@@ -17,7 +17,7 @@ def login():
 
         if len(user) == 0:
             session.pop('_flashes', None)
-            flash('Invalid username or password!')
+            flash('Login ou senha inválido(a)!')
             return redirect(url_for('login'))
         else:
             session['username'] = user['name']
