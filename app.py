@@ -1,34 +1,35 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 import sqlite3 as sql
+
+from helpers import fetch_all_books, fetch_book, fetch_user, map_book, rent, return_book, show_user_books
 
 app = Flask(__name__)
 app.secret_key = 'mysecretkey'
 
-# Rota para exibir a página inicial
-# Rota para página de login
+# Rota para exibir a página inicial/página de login
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-
-        connection = sql.connect('library.db')
-        cursor = connection.cursor()
-
-        name = request.form['name']
-        password = request.form['password']
-        print(name, password)
-
-        query  = "SELECT name, password FROM user where name= '"+name+"' and password= '"+password+"'"
-        cursor.execute(query)
-        results = cursor.fetchall()
-
+        user = fetch_user(request.form['name'], request.form['password'])
         books = fetch_all_books()
 
-        if len(results) == 0:
-            print("Sorry, Incorrect Credentials Provided. Try again")
+        if len(user) == 0:
+            session.pop('_flashes', None)
+            flash('Invalid username or password!')
+            return redirect(url_for('login'))
         else:
+            session['username'] = user['name']
+            session['user_id'] = user['id']
             return render_template('book/books.html', books=books)
+    
     return render_template('login/login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 @app.route("/books")
 def home():
@@ -36,25 +37,20 @@ def home():
     return render_template('book/books.html', books=books)
 
 # Rota para exibir um livro específico
+
 @app.route("/books/<int:id>")
 def get_book(id):
-    con = sql.connect('library.db')
-    cur = con.cursor()
-
-    cur.execute(f"""
-    SELECT * FROM books WHERE id = {id}
-    """)
-
-    book = cur.fetchone()
-    book_info = map_book(book)
+    book_info = fetch_book(id)
     return render_template('book/book.html', book=book_info)
 
 # Rota para exibir o formulário de cadastro de livro
+
 @app.route("/book_form")
 def book_form():
     return render_template('book/book_form.html')
 
 # Rota para cadastrar um novo livro
+
 @app.route("/cadastro_livro", methods=["POST"])
 def cadastrar_livro():
     try:
@@ -78,29 +74,7 @@ def cadastrar_livro():
         flash("Erro ao cadastrar livro: " + str(e))
         return redirect(url_for('book_form'))
 
-# Função para buscar todos os livros cadastrados no banco de dados
-def fetch_all_books():
-    con = sql.connect('library.db')
-    cur = con.cursor()
-
-    cur.execute("""
-    SELECT * FROM books
-    """)
-
-    books = cur.fetchall()
-
-    books_resp = list(map(map_book, books))
-    return books_resp
-
-# Função para mapear os dados do banco de dados para um dicionário
-def map_book(book):
-    return {
-        "id": book[0],
-        "name": book[1],
-        "author": book[2],
-        "is_available": "Sim" if book[3] == 1 else "Não"
-    }
-
+# Rota para atualizar um livro específico
 
 @app.route("/books/editar/<int:id>")
 def edit_book_form(id):
@@ -114,8 +88,6 @@ def edit_book_form(id):
     book = cur.fetchone()
     book_info = map_book(book)
     return render_template('book/edit_book.html', book=book_info)
-
-# Rota para atualizar um livro específico
 
 @app.route("/books/editar/<int:id>", methods=["POST"])
 def edit_book(id):
@@ -157,6 +129,45 @@ def delete_book(id):
     book_info = map_book(book)
 
     return render_template('book/delete_book.html', book=book_info)
+
+@app.route('/rent_book/<int:id>', methods=['GET', 'POST'])
+def rent_book(id):
+    book = fetch_book(id)
+    if request.method == 'POST':
+        user_id = session["user_id"]
+        if rent(user_id, id):
+            session.pop('_flashes', None)
+            flash("Livro alugado com sucesso!")
+            rents = show_user_books()
+            return render_template('login/user.html', rents=rents)
+        else:
+            session.pop('_flashes', None)
+            flash("Livro indisponível para locação")
+            rents = show_user_books()
+            return render_template('login/user.html', rents=rents)
+    
+    return render_template('book/rent_book.html', book=book)
+
+@app.route('/rents', methods=['GET'])
+def rented_books():
+    rents = show_user_books()
+
+    return render_template('login/user.html', rents=rents)
+
+@app.route('/return_book/<int:id>', methods=['GET'])
+def return_rented_book(id):
+    user_id = session["user_id"]
+    
+    if return_book(user_id, id):
+        session.pop('_flashes', None)
+        flash("Livro devolvido com sucesso!")
+        rents = show_user_books()
+        return render_template('login/user.html', rents=rents)
+    else:
+        session.pop('_flashes', None)
+        flash("Erro na devolução do livro!")
+        rents = show_user_books()
+        return render_template('login/user.html', rents=rents)
 
 if __name__ == "__main__":
     app.run(debug=True)

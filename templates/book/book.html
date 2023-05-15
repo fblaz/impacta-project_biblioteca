@@ -1,15 +1,28 @@
 {% extends 'book/base.html' %} {% block content %}
 <br />
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class="flashes">
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
 <div class="container">
   <div class="jumbotron jumbotron-fluid">
     <h1 class="display-4">{{ book['name'] }}</h1>
     <p class="lead">{{ book['author'] }}</p>
     <hr class="my-4" />
     <p class="lead">
-      <a class="btn btn-dark" href="#" role="button">Alugar</a>
-      <a class="btn btn-dark" href="{{ url_for('home') }}" role="button">
-        Voltar
-      </a>
+      {% if book['is_available'] == "Sim" %}
+      <a class="btn btn-dark" href="{{ url_for('rent_book', id=book['id'])}}" role="button">Alugar</a>
+      {% else %}
+    <h3>Livro não disponível para locação!</h3><br>
+    {% endif %}
+    <a class="btn btn-dark" href="{{ url_for('home') }}" role="button">
+      Voltar
+    </a>
     </p>
   </div>
 </div>

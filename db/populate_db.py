@@ -3,6 +3,7 @@ import sqlite3 as sql
 con = sql.connect('library.db')
 cursor = con.cursor()
 
+# Tabela de livros
 sql = '''
 INSERT INTO books (NAME, AUTHOR, IS_AVAILABLE) VALUES 
     ('A Arte da Guerra', 'TSU, Sun', 1),

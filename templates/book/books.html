@@ -23,9 +23,17 @@
     {% endfor %}
   </tbody>
 </table>
+
 <div style="text-align: center;">
   <button type="button" class="btn btn-dark">
     <a class="nav-link" href="{{ url_for('book_form') }}">Adicionar Livro</a>
   </button>
+  <button type="button" class="btn btn-dark">
+    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+  </button>
+  <button type="button" class="btn btn-dark">
+    <a class="nav-link" href="{{ url_for('rented_books') }}">Meus livros</a>
+  </button>
 </div>
+
 {% endblock %}
