@@ -130,6 +130,8 @@ def delete_book(id):
 
     return render_template('book/delete_book.html', book=book_info)
 
+# Rota para locação de livros
+
 @app.route('/rent_book/<int:id>', methods=['GET', 'POST'])
 def rent_book(id):
     book = fetch_book(id)
@@ -148,11 +150,15 @@ def rent_book(id):
     
     return render_template('book/rent_book.html', book=book)
 
+# Rota para ver livros locados
+
 @app.route('/rents', methods=['GET'])
 def rented_books():
     rents = show_user_books()
 
     return render_template('login/user.html', rents=rents)
+
+# Rota para devolução de livros
 
 @app.route('/return_book/<int:id>', methods=['GET'])
 def return_rented_book(id):
