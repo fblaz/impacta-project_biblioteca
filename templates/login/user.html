@@ -8,7 +8,10 @@
 </ul>
 {% endif %}
 {% endwith %}
-<h2>Meus livros alugados</h2>
+<h3 style="text-align: center">Meus livros alugados</h3><br>
+{% if rents == [] %}
+<h6 style="text-align: center">Ops, aparentemente você ainda não alugou nenhum livro...</h6><br>
+{% else %}
 <table class="table table-dark table-striped table-hover">
     <thead>
         <th scope="col">ID</th>
@@ -27,6 +30,7 @@
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
 
 <div style="text-align: center;">
     <button type="button" class="btn btn-dark">
