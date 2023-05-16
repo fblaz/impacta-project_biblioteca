@@ -215,7 +215,7 @@ def generate_user_report(formato):
 def generate_book_report(formato):
     con = sql.connect('library.db')
     query = '''
-        SELECT ID, NAME as NOME, AUTHOR as AUTOR, CASE WHEN IS_AVAILABLE = 1 THEN 'Alugado' ELSE 'Disponível' END AS STATUS FROM books
+        SELECT ID, NAME as NOME, AUTHOR as AUTOR, CASE WHEN IS_AVAILABLE = 1 THEN 'Alugado' ELSE 'Disponível' END AS STATUSpython FROM books
     '''
     df = pd.read_sql_query(query, con)
 
