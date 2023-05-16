@@ -12,11 +12,16 @@
     <form action="{{ url_for('report') }}" method="post">  <!-- Alteração na tag <form> -->
         <div class="form-group">
             <label for="relatorio">Selecione o tipo de relatório:</label>
-            <select class="form-control" id="relatorio" name="relatorio">
-                <option value="usuarios">Relatório de Usuários</option>
-                <option value="livros">Relatório de Livros</option>
-            </select>
+            <div class="row">
+                <div class="col-md-6">
+                    <select class="custom-select" id="relatorio" name="relatorio">
+                        <option value="usuarios">Relatório de Usuários</option>
+                        <option value="livros">Relatório de Livros</option>
+                    </select>
+                </div>
+            </div>
         </div>
+
         <div class="form-group mt-3">
             <label for="formato">Selecione o formato:</label>
             <div class="form-check">
