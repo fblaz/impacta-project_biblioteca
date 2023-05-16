@@ -3,7 +3,7 @@ import sqlite3 as sql
 import pandas as pd
 import os
 from helpers import fetch_all_books, fetch_book, fetch_user, map_book, rent, return_book, show_user_books
-
+import json
 
 app = Flask(__name__)
 app.secret_key = 'mysecretkey'
@@ -197,11 +197,13 @@ def generate_user_report(formato):
     '''
     df = pd.read_sql_query(query, con)
 
-    # Gerar o relatório em PDF
-    if formato == 'pdf':
-        pdf_filepath = os.path.join(os.path.expanduser("~"), "Desktop", "user_report.pdf")
-        df.to_csv(pdf_filepath, index=False)
-        flash('Relatório de usuários em PDF gerado com sucesso. O arquivo foi salvo na área de trabalho.', 'success')
+    # Gerar o relatório em Json
+    if formato == 'json':
+        json_filepath = os.path.join(os.path.expanduser("~"), "Desktop", "user_report.json")
+        df_json = df.to_dict(orient='records')
+        with open(json_filepath, 'w') as json_file:
+            json.dump(df_json, json_file, indent=4)
+        flash('Relatório de usuários em JSON gerado com sucesso. O arquivo foi salvo na área de trabalho.', 'success')
 
     # Gerar o relatório em Excel
     elif formato == 'excel':
@@ -217,11 +219,14 @@ def generate_book_report(formato):
     '''
     df = pd.read_sql_query(query, con)
 
-    # Gerar o relatório em PDF
-    if formato == 'pdf':
-        pdf_filepath = os.path.join(os.path.expanduser("~"), "Desktop", "book_report.pdf")
-        df.to_csv(pdf_filepath, index=False)
-        flash('Relatório de livros em PDF gerado com sucesso. O arquivo foi salvo na área de trabalho.', 'success')
+    # Gerar o relatório em Json
+    if formato == 'json':
+        json_filepath = os.path.join(os.path.expanduser("~"), "Desktop", "book_report.json")
+        df_json = df.to_dict(orient='records')
+        with open(json_filepath, 'w') as json_file:
+            json.dump(df_json, json_file, indent=4)
+        flash('Relatório de livros em JSON gerado com sucesso. O arquivo foi salvo na área de trabalho.', 'success')
+
 
     # Gerar o relatório em Excel
     elif formato == 'excel':
