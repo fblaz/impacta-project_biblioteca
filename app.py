@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 import sqlite3 as sql
-
+import pandas as pd
+import os
 from helpers import fetch_all_books, fetch_book, fetch_user, map_book, rent, return_book, show_user_books
+
 
 app = Flask(__name__)
 app.secret_key = 'mysecretkey'
+
 
 # Rota para exibir a página inicial/página de login
 
@@ -23,18 +26,21 @@ def login():
             session['username'] = user['name']
             session['user_id'] = user['id']
             return render_template('book/books.html', books=books)
-    
+
     return render_template('login/login.html')
+
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
 
+
 @app.route("/books")
 def home():
     books = fetch_all_books()
     return render_template('book/books.html', books=books)
+
 
 # Rota para exibir um livro específico
 
@@ -43,11 +49,13 @@ def get_book(id):
     book_info = fetch_book(id)
     return render_template('book/book.html', book=book_info)
 
+
 # Rota para exibir o formulário de cadastro de livro
 
 @app.route("/book_form")
 def book_form():
     return render_template('book/book_form.html')
+
 
 # Rota para cadastrar um novo livro
 
@@ -74,6 +82,7 @@ def cadastrar_livro():
         flash("Erro ao cadastrar livro: " + str(e))
         return redirect(url_for('book_form'))
 
+
 # Rota para atualizar um livro específico
 
 @app.route("/books/editar/<int:id>")
@@ -88,6 +97,7 @@ def edit_book_form(id):
     book = cur.fetchone()
     book_info = map_book(book)
     return render_template('book/edit_book.html', book=book_info)
+
 
 @app.route("/books/editar/<int:id>", methods=["POST"])
 def edit_book(id):
@@ -147,8 +157,9 @@ def rent_book(id):
             flash("Livro indisponível para locação")
             rents = show_user_books()
             return render_template('login/user.html', rents=rents)
-    
+
     return render_template('book/rent_book.html', book=book)
+
 
 # Rota para ver livros locados
 
@@ -158,12 +169,13 @@ def rented_books():
 
     return render_template('login/user.html', rents=rents)
 
+
 # Rota para devolução de livros
 
 @app.route('/return_book/<int:id>', methods=['GET'])
 def return_rented_book(id):
     user_id = session["user_id"]
-    
+
     if return_book(user_id, id):
         session.pop('_flashes', None)
         flash("Livro devolvido com sucesso!")
@@ -175,5 +187,65 @@ def return_rented_book(id):
         rents = show_user_books()
         return render_template('login/user.html', rents=rents)
 
+
+# Rota para gerar relatórios
+
+def generate_user_report(formato):
+    con = sql.connect('library.db')
+    query = '''
+        SELECT ID,NAME FROM user
+    '''
+    df = pd.read_sql_query(query, con)
+
+    # Gerar o relatório em PDF
+    if formato == 'pdf':
+        pdf_filepath = os.path.join(os.path.expanduser("~"), "Desktop", "user_report.pdf")
+        df.to_csv(pdf_filepath, index=False)
+        flash('Relatório de usuários em PDF gerado com sucesso. O arquivo foi salvo na área de trabalho.', 'success')
+
+    # Gerar o relatório em Excel
+    elif formato == 'excel':
+        excel_filepath = os.path.join(os.path.expanduser("~"), "Desktop", "user_report.xlsx")
+        df.to_excel(excel_filepath, index=False)
+        flash('Relatório de usuários em Excel gerado com sucesso. O arquivo foi salvo na área de trabalho.', 'success')
+
+
+def generate_book_report(formato):
+    con = sql.connect('library.db')
+    query = '''
+        SELECT * FROM books
+    '''
+    df = pd.read_sql_query(query, con)
+
+    # Gerar o relatório em PDF
+    if formato == 'pdf':
+        pdf_filepath = os.path.join(os.path.expanduser("~"), "Desktop", "book_report.pdf")
+        df.to_csv(pdf_filepath, index=False)
+        flash('Relatório de livros em PDF gerado com sucesso. O arquivo foi salvo na área de trabalho.', 'success')
+
+    # Gerar o relatório em Excel
+    elif formato == 'excel':
+        excel_filepath = os.path.join(os.path.expanduser("~"), "Desktop", "book_report.xlsx")
+        df.to_excel(excel_filepath, index=False)
+        flash('Relatório de livros em Excel gerado com sucesso. O arquivo foi salvo na área de trabalho.', 'success')
+
+
+
+@app.route("/report", methods=['GET', 'POST'])
+def report():
+    if request.method == 'POST':
+        tipo = request.form['relatorio']
+        formato = request.form['formato']
+
+        if tipo == 'usuarios':
+            generate_user_report(formato)
+        elif tipo == 'livros':
+            generate_book_report(formato)
+
+        return redirect(url_for('report'))
+
+    return render_template('book/report.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
+

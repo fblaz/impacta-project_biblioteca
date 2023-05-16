@@ -20,7 +20,7 @@
     </div>
   </nav>
 
-  <a class="navbar-brand fw-bold" href="#">Bem vindo(a) {{ session["username"] }}</a>
+  <a class="navbar-brand fw-bold" href="#">Bem vindo(a), {{ session["username"] }}</a>
   <br>
 
   <main>{% block content %}{% endblock %}</main>

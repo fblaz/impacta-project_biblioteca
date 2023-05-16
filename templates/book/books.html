@@ -1,4 +1,5 @@
-{% extends 'book/base.html' %} {% block content %}
+{% extends 'book/base.html' %} 
+{% block content %}
 <table class="table table-dark table-striped table-hover">
   <thead>
     <th scope="col">ID</th>
@@ -24,16 +25,18 @@
   </tbody>
 </table>
 
-<div style="text-align: center;">
-  <button type="button" class="btn btn-dark">
-    <a class="nav-link" href="{{ url_for('book_form') }}">Adicionar Livro</a>
-  </button>
-  <button type="button" class="btn btn-dark">
-    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-  </button>
-  <button type="button" class="btn btn-dark">
-    <a class="nav-link" href="{{ url_for('rented_books') }}">Meus livros</a>
+<div class="d-flex justify-content-center">
+    <a href="{{ url_for('book_form') }}" class="btn btn-dark">Adicionar Livro</a>
+    <a href="{{ url_for('rented_books') }}" class="btn btn-dark">Meus livros</a>
+    <a href="{{ url_for('report') }}" class="btn btn-dark">Relatórios</a>
+</div>
+<br>
+<div class="text-center">
+  <button type="button" class="btn btn-primary">
+    <a href="{{ url_for('logout') }}" class="text-white">Logout</a>
   </button>
 </div>
 
 {% endblock %}
+
+
